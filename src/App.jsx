@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Button, ThemeProvider, createTheme, CssBaseline, Switch, Box } from "@mui/material";
+import { Container, Typography, Button, ThemeProvider, createTheme, CssBaseline, Switch, Box, Grid } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import TodoList from "./components/TodoList.jsx";
@@ -30,6 +30,12 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
+  /** ✅ Function to Play Notification Sound */
+  const playNotificationSound = () => {
+    const audio = new Audio("/notification.mp3"); // Ensure this file exists in "public/"
+    audio.play().catch(error => console.error("Sound play blocked:", error));
+  };
+
   /** ✅ Request Web Notification Permission */
   const requestNotificationPermission = () => {
     if (!("Notification" in window)) {
@@ -40,7 +46,7 @@ function App() {
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
         toast.success("✅ Notifications enabled!");
-        showTestNotification(); // Show a test notification
+        showTestNotification(); // Show a test notification with sound
       } else {
         toast.error("❌ Notifications blocked!");
       }
@@ -54,6 +60,8 @@ function App() {
         body: "This is a test notification from your hosted app! 🚀",
         icon: "/Logo.jpeg", // Ensure the image is in "public/"
       });
+
+      playNotificationSound(); // 🔊 Play sound when the notification appears
     }
   };
 
@@ -63,41 +71,50 @@ function App() {
       {showDeveloperCard ? (
         <DeveloperInfo onContinue={() => setShowDeveloperCard(false)} />
       ) : (
-        <Box sx={{ position: "relative", minHeight: "100vh", padding: 2 }}>
+        <Box sx={{ minHeight: "100vh", padding: 2 }}>
           
-          {/* 🌙 Dark Mode Toggle (Top-Left Corner) */}
-          <Switch 
-            checked={darkMode} 
-            onChange={() => setDarkMode(!darkMode)} 
-            sx={{
-              position: "absolute",
-              top: 20,
-              left: 20,
-              fontSize: "12px",
-              backgroundColor: "#fff",
-              borderRadius: "20px",
-              padding: "5px",
-              boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)"
-            }}
-          />
+          {/* ✅ Responsive Button Container */}
+          <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
+            {/* 🌙 Dark Mode Toggle */}
+            <Grid item>
+              <Switch 
+                checked={darkMode} 
+                onChange={() => setDarkMode(!darkMode)} 
+              />
+            </Grid>
 
-          {/* 🔔 Enable Notifications Button (Top-Right Corner) */}
-          <Button 
-            variant="contained" 
-            onClick={requestNotificationPermission} 
-            sx={{
-              position: "absolute",
-              top: 20,
-              right: 20,
-              fontSize: "12px",
-              padding: "5px 10px",
-              minWidth: "auto",
-              backgroundColor: "#007bff",
-              "&:hover": { backgroundColor: "#0056b3" }
-            }}
-          >
-            🔔 Enable Notifications
-          </Button>
+            {/* 🔔 Enable Notifications Button */}
+            <Grid item>
+              <Button 
+                variant="contained" 
+                onClick={requestNotificationPermission} 
+                sx={{
+                  fontSize: "12px",
+                  padding: "8px 15px",
+                  backgroundColor: "#007bff",
+                  "&:hover": { backgroundColor: "#0056b3" }
+                }}
+              >
+                🔔 Enable Notifications
+              </Button>
+            </Grid>
+
+            {/* 🔊 Test Sound Button */}
+            <Grid item>
+              <Button 
+                variant="contained" 
+                onClick={playNotificationSound} 
+                sx={{
+                  fontSize: "12px",
+                  padding: "8px 15px",
+                  backgroundColor: "#28a745",
+                  "&:hover": { backgroundColor: "#218838" }
+                }}
+              >
+                🔊 Test Sound
+              </Button>
+            </Grid>
+          </Grid>
 
           {/* 📋 Task Manager Container */}
           <Container maxWidth="sm" className={`container ${darkMode ? "dark-mode" : ""}`}>
