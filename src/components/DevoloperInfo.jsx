@@ -35,11 +35,11 @@ const DeveloperInfo = ({ onContinue }) => {
 
         {/* Links Section */}
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 2 }}>
-          <IconButton color="primary" component="a" href="https://abisheksathiyan.github.io/Abishek_Portfolio/" target="_blank">
+          <IconButton color="secondary" component="a" href="https://abisheksathiyan.github.io/Abishek_Portfolio/" target="_blank">
             <LanguageIcon />
           </IconButton>
 
-          <IconButton color="secondary" component="a" href="http://github.com/AbishekSathiyan" target="_blank">
+          <IconButton color="inherit" component="a" href="http://github.com/AbishekSathiyan" target="_blank">
             <GitHubIcon />
           </IconButton>
 
