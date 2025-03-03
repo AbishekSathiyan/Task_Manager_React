@@ -1,21 +1,43 @@
 import React, { useState, useEffect } from "react";
-import { Container, Typography, Button, ThemeProvider, createTheme, CssBaseline, Switch, Box, Grid } from "@mui/material";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import {
+  Container,
+  Typography,
+  Button,
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Switch,
+  Box,
+  Grid,
+} from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import TodoList from "./components/TodoList.jsx";
 import DeveloperInfo from "./components/DevoloperInfo";
 import "./App.css";
 
-console.log("Checking components directory:", import.meta.glob('./components/*'));
-
+// Light Mode Theme
 const lightTheme = createTheme({
   typography: { fontFamily: "Poppins, sans-serif" },
-  palette: { mode: "light" },
+  palette: {
+    mode: "light",
+    primary: { main: "#007bff" },
+    secondary: { main: "#28a745" },
+    background: { default: "#f4f7fc", paper: "#ffffff" },
+    text: { primary: "#333", secondary: "#555" },
+  },
 });
 
+// Dark Mode Theme (Perfect Contrast)
 const darkTheme = createTheme({
   typography: { fontFamily: "Poppins, sans-serif" },
-  palette: { mode: "dark" },
+  palette: {
+    mode: "dark",
+    primary: { main: "#90caf9" },
+    secondary: { main: "#f48fb1" },
+    background: { default: "#121212", paper: "#1e1e1e" },
+    text: { primary: "#E0E0E0", secondary: "#B0BEC5" },
+  },
 });
 
 function App() {
@@ -30,10 +52,14 @@ function App() {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
 
+  useEffect(() => {
+    document.body.classList.toggle("dark-mode", darkMode);
+  }, [darkMode]);
+
   /** ✅ Function to Play Notification Sound */
   const playNotificationSound = () => {
-    const audio = new Audio("/notification.mp3"); // Ensure this file exists in "public/"
-    audio.play().catch(error => console.error("Sound play blocked:", error));
+    const audio = new Audio("/notification.mp3");
+    audio.play().catch((error) => console.error("Sound play blocked:", error));
   };
 
   /** ✅ Request Web Notification Permission */
@@ -46,7 +72,7 @@ function App() {
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
         toast.success("✅ Notifications enabled!");
-        showTestNotification(); // Show a test notification with sound
+        showTestNotification();
       } else {
         toast.error("❌ Notifications blocked!");
       }
@@ -58,10 +84,10 @@ function App() {
     if (Notification.permission === "granted") {
       new Notification("Test Notification", {
         body: "This is a test notification from your hosted app! 🚀",
-        icon: "/Logo.jpeg", // Ensure the image is in "public/"
+        icon: "/Logo.jpeg",
       });
 
-      playNotificationSound(); // 🔊 Play sound when the notification appears
+      playNotificationSound();
     }
   };
 
@@ -71,44 +97,37 @@ function App() {
       {showDeveloperCard ? (
         <DeveloperInfo onContinue={() => setShowDeveloperCard(false)} />
       ) : (
-        <Box sx={{ minHeight: "100vh", padding: 2 }}>
-          
-          {/* ✅ Responsive Button Container */}
+        <Box sx={{ minHeight: "100vh", padding: 2, bgcolor: darkMode ? "#121212" : "#f4f7fc" }}>
+          {/* ✅ Dark Mode Toggle & Buttons */}
           <Grid container spacing={2} alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
-            {/* 🌙 Dark Mode Toggle */}
             <Grid item>
-              <Switch 
-                checked={darkMode} 
-                onChange={() => setDarkMode(!darkMode)} 
-              />
+              <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
             </Grid>
-
-            {/* 🔔 Enable Notifications Button */}
             <Grid item>
-              <Button 
-                variant="contained" 
-                onClick={requestNotificationPermission} 
+              <Button
+                variant="contained"
+                onClick={requestNotificationPermission}
                 sx={{
                   fontSize: "12px",
                   padding: "8px 15px",
-                  backgroundColor: "#007bff",
-                  "&:hover": { backgroundColor: "#0056b3" }
+                  bgcolor: darkMode ? "#2196F3" : "#007bff",
+                  color: "#fff",
+                  "&:hover": { bgcolor: darkMode ? "#1976D2" : "#0056b3" },
                 }}
               >
                 🔔 Enable Notifications
               </Button>
             </Grid>
-
-            {/* 🔊 Test Sound Button */}
             <Grid item>
-              <Button 
-                variant="contained" 
-                onClick={playNotificationSound} 
+              <Button
+                variant="contained"
+                onClick={playNotificationSound}
                 sx={{
                   fontSize: "12px",
                   padding: "8px 15px",
-                  backgroundColor: "#28a745",
-                  "&:hover": { backgroundColor: "#218838" }
+                  bgcolor: darkMode ? "#43A047" : "#28a745",
+                  color: "#fff",
+                  "&:hover": { bgcolor: darkMode ? "#388E3C" : "#218838" },
                 }}
               >
                 🔊 Test Sound
@@ -118,11 +137,12 @@ function App() {
 
           {/* 📋 Task Manager Container */}
           <Container maxWidth="sm" className={`container ${darkMode ? "dark-mode" : ""}`}>
-            <Typography variant="h4" gutterBottom>📋 Task Manager</Typography>
+            <Typography variant="h4" gutterBottom sx={{ color: darkMode ? "#E0E0E0" : "#343" }}>
+              Task Manager
+            </Typography>
             <TodoList todos={todos} setTodos={setTodos} />
             <ToastContainer />
           </Container>
-          
         </Box>
       )}
     </ThemeProvider>

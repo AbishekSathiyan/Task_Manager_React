@@ -8,6 +8,7 @@ body {
   transition: background-color 0.3s;
 }
 
+/* Light Mode */
 .container {
   max-width: 600px;
   margin: auto;
@@ -15,13 +16,49 @@ body {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  color: #333;
 }
 
+/* Dark Mode */
 .dark-mode {
   background-color: #121212;
-  color: white;
+  color: #c1b9b9;
 }
 
+.dark-mode .container {
+  background: #1e1e1e;
+  color: black;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Fix for Invisible Buttons */
+.dark-mode button {
+  background-color: #333 !important;
+  color: rgb(129, 147, 237) !important;
+}
+
+.dark-mode button:hover {
+  background-color: #9ec8f2 !important;
+}
+
+/* Fix for Toast Notifications */
+.dark-mode .Toastify__toast {
+  background-color: #2C2C2C !important;
+  color: #E0E0E0 !important;
+}
+
+.dark-mode .Toastify__progress-bar {
+  background: #088cf8 !important;
+}
+
+/* Fix for Todo Items */
+.dark-mode .todo-item {
+  background-color: #222 !important;
+  color: #c5b6b6 !important;
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
   .MuiContainer-root {
     padding: 15px !important;
